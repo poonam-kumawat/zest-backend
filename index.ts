@@ -1,7 +1,10 @@
 import dotenv from 'dotenv';
 import express, { Express ,Request,Response} from 'express';
+import { connectToMongo } from './conn';
 
 dotenv.config();
+
+connectToMongo()
 
 const app: Express = express();
 const port = process.env.PORT;

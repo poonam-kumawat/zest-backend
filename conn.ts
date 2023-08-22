@@ -1,15 +1,9 @@
-import mongoose from "mongoose";
-console.log(process.env.MONGODB_URI)
+import mongoose, { ConnectOptions } from "mongoose";
 
-// mongoose.connect(
-    
-//     process.env.MONGODB_URI, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology:true
-//     }
-// ).then(()=>{
-//     console.log('Database connected');
-// }).catch(()=>{
-//     console.error('Error connecting to database');
-// });
-
+export const connectToMongo = async () => {
+    await mongoose.connect(process.env.MONGODB_URI as string, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    } as ConnectOptions)
+    console.log("Mongo DB Running")
+}
