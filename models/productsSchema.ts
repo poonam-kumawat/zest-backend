@@ -1,7 +1,6 @@
 import { Schema, model, ObjectId } from "mongoose";
 
 interface Produts {
-  id: ObjectId;
   productName: string;
   price: number;
   quantity: number;
@@ -11,7 +10,6 @@ interface Produts {
 }
 
 const productSchema = new Schema<Produts>({
-  id: { type: Schema.ObjectId, required: true },
   productName: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
@@ -20,4 +18,4 @@ const productSchema = new Schema<Produts>({
   image: { type: String },
 });
 
-export default model<Produts>("productSchema", productSchema);
+export default model<Produts>("product", productSchema);
