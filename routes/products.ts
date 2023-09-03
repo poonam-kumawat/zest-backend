@@ -12,17 +12,27 @@ import categorySchema from "../models/category";
 
     
 // });
+//Find all products
 router.route("/all").get(async (req:Request, res:Response)=>{
     const data=await productsSchema.find({});
     return res.status(200).send(data);
 })
+//Find all categories
 router.route("/category").get(async (req:Request, res:Response)=>{
-    // console.log(res);
     const result=await categorySchema.find({});
-  console.log(result);
-
     return res.status(200).send(result);
 })
+
+//Product filter api
+router.route('/find').post(async (req : Request ,res : Response )=>{
+  const filter=req.body;
+  const data=await productsSchema.find(filter);
+  return res.status(200).send(data);
+});
+
+
+
+
 
 export default router;
 

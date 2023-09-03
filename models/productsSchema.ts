@@ -1,21 +1,23 @@
-import { Schema, model, ObjectId } from "mongoose";
+import mongoose, { Schema, model, ObjectId } from "mongoose";
 
 interface Produts {
   productName: string;
   price: number;
-  quantity: number;
+  quantity: string;
   categories: string;
   product_description: string;
   image: string;
+  categoryIds:[ObjectId];
 }
 
 const productSchema = new Schema<Produts>({
   productName: { type: String, required: true },
   price: { type: Number, required: true },
-  quantity: { type: Number, required: true },
+  quantity: { type: String, required: true },
   categories: { type: String, required: true },
   product_description: { type: String },
   image: { type: String },
+  categoryIds: { type: [mongoose.Types.ObjectId] },
 });
 
 export default model<Produts>("product", productSchema);
