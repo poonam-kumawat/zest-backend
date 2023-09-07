@@ -1,12 +1,21 @@
 import dotenv from 'dotenv';
 import express, { Express ,Request,Response} from 'express';
-
-
+import { connectToMongo } from './conn';
+import productRouter from './routes/productRoute';
+import categoryRouter from './routes/categoryRoute';
 
 dotenv.config();
 
+connectToMongo()
+
+
 const app: Express = express();
 const port = process.env.PORT;
+app.use(express.json());
+app.use("/api/product",productRouter);
+app.use("/api/category",categoryRouter);
+
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
