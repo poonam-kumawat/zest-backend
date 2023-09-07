@@ -1,5 +1,5 @@
 import express, {Request,Response} from "express";
-const router = express.Router();
+const productRouter = express.Router();
 import productsSchema from "../models/productsSchema";
 
 
@@ -13,20 +13,20 @@ import productsSchema from "../models/productsSchema";
     
 // });
 //Find all products
-router.route("/all").get(async (req:Request, res:Response)=>{
+productRouter.route("/all").get(async (req:Request, res:Response)=>{
     const data=await productsSchema.find({});
     return res.status(200).send(data);
 })
 
 
 //Product filter api
-router.route('/find').post(async (req : Request ,res : Response )=>{
+productRouter.route('/find').post(async (req : Request ,res : Response )=>{
   const filter=req.body;
   const data=await productsSchema.find(filter);
   return res.status(200).send(data);
 });
 
 
-export default router;
+export default productRouter;
 
 

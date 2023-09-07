@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 import express, { Express ,Request,Response} from 'express';
 import { connectToMongo } from './conn';
-import router from './routes/products';
+import productRouter from './routes/productRoute';
 import categoryrouter from './routes/categoryRoute';
-
-
 
 dotenv.config();
 
@@ -14,7 +12,7 @@ connectToMongo()
 const app: Express = express();
 const port = process.env.PORT;
 app.use(express.json());
-app.use("/api",router);
+app.use("/api",productRouter);
 app.use("/api/category",categoryrouter);
 
 
