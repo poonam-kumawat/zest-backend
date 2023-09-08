@@ -2,7 +2,7 @@ import mongoose, { Schema, model, ObjectId } from "mongoose";
 
 interface Produts {
   productName: string;
-  price: number;
+  price: string;
   quantity: string;
   categories: string;
   product_description: string;
@@ -12,7 +12,7 @@ interface Produts {
 
 const productSchema = new Schema<Produts>({
   productName: { type: String, required: true },
-  price: { type: Number, required: true },
+  price: { type: String, required: true },
   quantity: { type: String, required: true },
   categories: { type: String, required: true },
   product_description: { type: String },
