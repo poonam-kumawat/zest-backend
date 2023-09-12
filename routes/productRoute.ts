@@ -13,14 +13,14 @@ import productsSchema from "../models/productsSchema";
     
 // });
 //Find all products
-productRouter.route("/all").get(async (req:Request, res:Response)=>{
+productRouter.route("/").get(async (req:Request, res:Response)=>{
     const data=await productsSchema.find({});
     return res.status(200).send(data);
 })
 
 
 //Product filter api
-productRouter.route('/find').post(async (req : Request ,res : Response )=>{
+productRouter.route('/').post(async (req : Request ,res : Response )=>{
   const filter=req.body;
   const data=await productsSchema.find(filter);
   return res.status(200).send(data);
