@@ -6,7 +6,7 @@ import categorySchema from "../models/category";
 
 
 //Find all categories
-categoryRouter.route("/categories").get(async (req:Request, res:Response)=>{
+categoryRouter.route("/").get(async (req:Request, res:Response)=>{
     const result=await categorySchema.find({});
     return res.status(200).send(result);
 })
