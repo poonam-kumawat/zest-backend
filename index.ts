@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectToMongo } from './conn';
 import productRouter from './routes/productRoute';
 import categoryRouter from './routes/categoryRoute';
+import userRouter from './routes/userRoute';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(cors(options));
 app.use(express.json());
 app.use("/api/product", productRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/auth", userRouter)
 
 
 
