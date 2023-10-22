@@ -1,18 +1,25 @@
-// emailService.ts
-import transporter from "./emailcontroller";
+import dotenv from "dotenv";
+import * as nodemailer from "nodemailer";
 
-const generateOTP = (): string => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+dotenv.config();
 
-const sendOTP = (email: string,otp:string): void => {
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  secure: false,
+  auth: {
+    user: process.env.SMTP_MAIL,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
+
+const sendOTP = (email: string): void => {
+  const otp=Math.floor(100000 + Math.random() * 900000).toString();
   const mailOptions = {
-    from: 'mailpoonam2002@gmail.com',
+    from: process.env.SMTP_MAIL,
     to: email,
     subject: 'Your OTP Code',
     html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
   };
-
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('Error sending email: ' + error);
@@ -21,6 +28,6 @@ const sendOTP = (email: string,otp:string): void => {
     }
   });
 };
-console.log(transporter.sendMail)
 
-export { generateOTP, sendOTP };
+
+export {sendOTP };
