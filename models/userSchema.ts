@@ -13,6 +13,7 @@ const userSchema = new Schema<User>({
     email: { type: String, required:true, unique:true},
     otpToken: { type: String },
     expirationTime: { type: String },
-});
+    
+},{ versionKey: false });
 
 export default model<User>("user", userSchema);

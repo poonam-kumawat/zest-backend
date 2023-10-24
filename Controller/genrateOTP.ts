@@ -12,8 +12,8 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-const sendOTP = (email: string): void => {
-  const otp=Math.floor(100000 + Math.random() * 900000).toString();
+const sendOTP = (email: string,otp:any): void => {
+  // otp=Math.floor(100000 + Math.random() * 900000).toString();
   const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,

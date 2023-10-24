@@ -18,6 +18,7 @@ const productSchema = new Schema<Produts>({
   product_description: { type: String },
   image: { type: String },
   categoryIds: { type: [mongoose.Types.ObjectId] },
+  
 });
 
 export default model<Produts>("product", productSchema);
