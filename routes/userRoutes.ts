@@ -1,9 +1,9 @@
 import express, { Request, Response, Router } from "express";
 
-import { sendOTP } from "../Controller/genrateOTP";
+import { sendOTP } from "../utils/genrateOTP";
 import userSchema from "../models/userSchema";
 import * as jwt from "jsonwebtoken";
-
+import { verifyRefresh } from "../middleware/authorize";
 
 const userRouter = express.Router();
 
@@ -49,28 +49,39 @@ userRouter.route("/verify-otp").post(async (req: Request, res: Response) => {
   const currentTime = new Date().toISOString();
   if (!email || !otp) {
     return res
-    .status(400)
-    .json({ success: false, error: "enter valid credientials" });
-   }
-   const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "30m",
-    });
-    console.log("accessToken",accessToken)
-   const refreshToken = jwt.sign({ email: email }, "refreshSecret", {
-    expiresIn: "5d",
-    });
-    console.log("refress",refreshToken)
-    
+      .status(400)
+      .json({ success: false, error: "enter valid credientials" });
+  }
+  const accessToken = jwt.sign({ email: email }, "accessSecret", {
+    expiresIn: "1m",
+  });
+  const refreshToken = jwt.sign({ email: email }, "refreshSecret", {
+    expiresIn: "5m",
+  });
+
   try {
     if (otp !== data.otpToken || data.expirationTime <= currentTime) {
       throw new Error("otp Invalid");
     }
-    return res.status(200).json({ accessToken,refreshToken });
-  } catch (error:any) {
+    return res.status(200).json({ accessToken, refreshToken, email });
+  } catch (error: any) {
     console.error(error);
-    return res.status(401).json({ success: false, msg: error.message });    
+    return res.status(401).json({ success: false, msg: error.message });
   }
-  
+});
+
+userRouter.route("/refresh").post(async (req: Request, res: Response) => {
+  const { email, refreshToken } = req.body;
+  const isValid = verifyRefresh(email, refreshToken);
+  if (!isValid) {
+    return res
+      .status(401)
+      .json({ success: false, error: "Invalid token,try login again" });
+  }
+  const accessToken = jwt.sign({ email: email }, "accessSecret", {
+    expiresIn: "5m", //alter this line in future
+  });
+  return res.status(200).json({ success: true, accessToken });
 });
 
 export default userRouter;
