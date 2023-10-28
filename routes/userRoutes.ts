@@ -79,9 +79,9 @@ userRouter.route("/refresh").post(async (req: Request, res: Response) => {
       .json({ success: false, error: "Invalid token,try login again" });
   }
   const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "5m", //alter this line in future
+    expiresIn: "1m", //alter this line in future
   });
-  return res.status(200).json({ success: true, accessToken });
+  return res.status(201).json({ success: true, accessToken });
 });
 
 export default userRouter;
