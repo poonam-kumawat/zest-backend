@@ -7,6 +7,7 @@ import categoryRouter from "./routes/categoryRoute";
 import emailRouter from "./routes/userRoutes";
 import userRouter from "./routes/userRoutes";
 import { authorize } from "./middleware/authorize";
+import pincodeRouter from './routes/pincodeRoute';
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use("/api/product", productRouter);
 app.use("/api/category", authorize, categoryRouter);
 app.use("/api/user", userRouter);
-
+app.use("/api/pincode", pincodeRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
