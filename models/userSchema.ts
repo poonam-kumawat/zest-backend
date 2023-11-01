@@ -7,7 +7,7 @@ interface User {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  addresses: Array<any>;
+  address: Array<any>;
 }
 
 const userSchema = new Schema<User>(
@@ -18,7 +18,7 @@ const userSchema = new Schema<User>(
     firstName: { type: String },
     lastName: { type: String },
     phoneNumber: { type: String },
-    addresses: { type: [{}] },
+    address: { type: [{}] },
   },
   { versionKey: false }
 );

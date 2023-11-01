@@ -120,9 +120,28 @@ userRouter
       }
 
       // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
-      const user = await userSchema
-        .findOneAndUpdate({ email: email }, { $set: update }, { upsert: false })
-        .lean();
+      let user;
+      if (update?.address) {
+        user = await userSchema
+          .findOneAndUpdate(
+            { email: email },
+            {
+              $push: {
+                address: { name: update.name, address: update.address },
+              },
+            },
+            { upsert: false }
+          )
+          .lean();
+      } else {
+        user = await userSchema
+          .findOneAndUpdate(
+            { email: email },
+            { $set: update },
+            { upsert: false }
+          )
+          .lean();
+      }
 
       if (user) {
         return res.status(200).json(user);
