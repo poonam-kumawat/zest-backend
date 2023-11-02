@@ -1,4 +1,4 @@
-import { Schema, model, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 interface Categories {
   categories: string;
