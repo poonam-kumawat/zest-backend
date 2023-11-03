@@ -12,6 +12,7 @@ export function authorize(req: any, res: any, next: any) {
     token = token.split(" ")[1];
     const decoded: any = jwt.verify(token, "accessSecret");
     req.email = decoded.email;
+    req.payload = decoded.email;
     next();
   } catch (error: any) {
     console.error(error);

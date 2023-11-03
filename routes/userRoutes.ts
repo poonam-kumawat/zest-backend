@@ -3,7 +3,7 @@ import express, { Request, Response, Router, response } from "express";
 import { sendOTP } from "../utils/genrateOTP";
 import userSchema from "../models/userSchema";
 import * as jwt from "jsonwebtoken";
-import { verifyRefresh } from "../middleware/authorize";
+import { authorize, verifyRefresh } from "../middleware/authorize";
 
 const userRouter = express.Router();
 
@@ -92,34 +92,43 @@ userRouter.route("/refresh").post(async (req: Request, res: Response) => {
 //   return users;
 // });
 
-userRouter.route("/get-details").post(async (req: Request, res: Response) => {
-  try {
-    if (!req.body.email) {
-      throw new Error("Email is required!");
+userRouter
+  .route("/get-details")
+  .post(authorize, async (req: any, res: Response) => {
+    try {
+      if (!req.body.email) {
+        throw new Error("Email is required!");
+      }
+      // add condition to restrict acces from other user by decodeding token in auth gaurd and passing in request payload
+
+      if (req.payload !== req.body.email) {
+        throw new Error("Unauthorized");
+      }
+      const user = await userSchema.findOne({ email: req.body.email }).lean();
+      if (user !== undefined) {
+        return res.status(200).json(user);
+      } else {
+        throw new Error("User not found!");
+      }
+    } catch (error: any) {
+      console.log(error);
+      return res.status(400).json({ error: error.message });
     }
-    // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
-    const user = await userSchema.findOne({ email: req.body.email }).lean();
-    if (user !== undefined) {
-      return res.status(200).json(user);
-    } else {
-      throw new Error("User not found!");
-    }
-  } catch (error: any) {
-    console.log(error);
-    return res.status(400).json({ error: error.message });
-  }
-});
+  });
 
 userRouter
   .route("/update-details")
-  .post(async (req: Request, res: Response) => {
+  .post(authorize, async (req: any, res: Response) => {
     try {
       const { email, update } = req.body;
       if (!email) {
         throw new Error("Email is required!");
       }
 
-      // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
+      // add condition to restrict acces from other user by decodeding token in auth gaurd and passing in request payload
+      if (req.payload !== req.body.email) {
+        throw new Error("Unauthorized");
+      }
       let user;
       if (update?.address) {
         user = await userSchema
