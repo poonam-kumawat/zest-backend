@@ -22,8 +22,6 @@ export function authorize(req: any, res: any, next: any) {
 export function verifyRefresh(email: any, token: any) {
   try {
     const decoded: any = jwt.verify(token, "refreshSecret");
-    console.log("kya hai", decoded);
-    console.log("email kya hai", email);
     return decoded.email === email;
   } catch (error) {
     console.error(error);
