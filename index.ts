@@ -7,7 +7,8 @@ import categoryRouter from "./routes/categoryRoute";
 import emailRouter from "./routes/userRoutes";
 import userRouter from "./routes/userRoutes";
 import { authorize } from "./middleware/authorize";
-import pincodeRouter from './routes/pincodeRoute';
+import pincodeRouter from "./routes/pincodeRoute";
+import addressRouter from "./routes/addressRoute";
 
 dotenv.config();
 
@@ -22,9 +23,10 @@ const options: cors.CorsOptions = {
 app.use(cors(options));
 app.use(express.json());
 app.use("/api/product", productRouter);
-app.use("/api/category", authorize, categoryRouter);
+app.use("/api/category", categoryRouter);
 app.use("/api/user", userRouter);
 app.use("/api/pincode", pincodeRouter);
+app.use("/api/address", addressRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
