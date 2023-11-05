@@ -5,14 +5,12 @@ interface Address {
   email: string;
   phoneNumber: number;
   address: string;
-  userId: [ObjectId];
 }
 const addressSchema = new Schema<Address>(
   {
     name: { type: String },
-    email: { type: String, unique: true },
+    email: { type: String, unique: true, required: true },
     phoneNumber: { type: Number },
-    userId: { type: [mongoose.Types.ObjectId] },
     address: { type: String },
   },
   { versionKey: false }
