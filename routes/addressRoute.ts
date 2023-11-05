@@ -8,12 +8,13 @@ addressRouter
   .post(async (req: Request, res: Response) => {
     try {
       ///user id will be taken by token
-      const { email, name, address, phoneNumber } = req.body;
+      const { email, name, address, phoneNumber, userId } = req.body;
       const createAddress = {
         email: email,
         name: name,
         address: address,
         phoneNumber: phoneNumber,
+        userId: userId,
       };
       const insertedAddresses = await addressSchema.create(createAddress);
       return res.status(201).json(insertedAddresses);
