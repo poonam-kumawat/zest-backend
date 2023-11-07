@@ -4,24 +4,22 @@ const addressRouter = express.Router();
 import addressSchema from "../models/addressSchema";
 import mongoose from "mongoose";
 
-addressRouter
-  .route("/get-addressdetails")
-  .post(async (req: Request, res: Response) => {
-    try {
-      ///user id will be taken by token
-      const { email, name, address, phoneNumber } = req.body;
-      const createAddress = {
-        email: email,
-        name: name,
-        address: address,
-        phoneNumber: phoneNumber,
-      };
-      const insertedAddresses = await addressSchema.create(createAddress);
-      return res.status(201).json(insertedAddresses);
-    } catch (error) {
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-  });
+addressRouter.route("/").post(async (req: Request, res: Response) => {
+  try {
+    ///user id will be taken by token
+    const { email, name, address, phoneNumber } = req.body;
+    const createAddress = {
+      email: email,
+      name: name,
+      address: address,
+      phoneNumber: phoneNumber,
+    };
+    const insertedAddresses = await addressSchema.create(createAddress);
+    return res.status(201).json(insertedAddresses);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 addressRouter.route("/get").post(async (req: Request, res: Response) => {
   try {
@@ -48,9 +46,9 @@ addressRouter.route("/").put(async (req: Request, res: Response) => {
   }
 });
 
-addressRouter.route("/").delete(async (req: Request, res: Response) => {
+addressRouter.route("/:id").delete(async (req: Request, res: Response) => {
   try {
-    const { id } = req.body;
+    const id = req.params.id;
     if (!id) {
       throw new Error("Id is required!");
     }

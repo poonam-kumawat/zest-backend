@@ -9,7 +9,7 @@ interface Address {
 const addressSchema = new Schema<Address>(
   {
     name: { type: String },
-    email: { type: String, unique: true, required: true },
+    email: { type: String, required: true },
     phoneNumber: { type: Number },
     address: { type: String },
   },
