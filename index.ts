@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoutes";
 import { authorize } from "./middleware/authorize";
 import pincodeRouter from "./routes/pincodeRoute";
 import addressRouter from "./routes/addressRoute";
+import paymentRouter from "./routes/paymentRoute";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/user", userRouter);
 app.use("/api/pincode", pincodeRouter);
 app.use("/api/address", addressRouter);
+app.use("/api/payment", paymentRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
