@@ -27,8 +27,8 @@ app.use("/api/product", productRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/user", userRouter);
 app.use("/api/pincode", pincodeRouter);
-app.use("/api/address", addressRouter);
-app.use("/api/payment", paymentRouter);
+app.use("/api/address", authorize, addressRouter);
+app.use("/api/payment", authorize, paymentRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
