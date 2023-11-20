@@ -103,7 +103,6 @@ paymentRouter.route("/orders-details").post(async (req, res) => {
       },
     },
   ]);
-  console.log(data);
   res.status(200).json(data);
 });
 export default paymentRouter;
