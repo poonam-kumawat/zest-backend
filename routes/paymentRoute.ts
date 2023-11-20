@@ -4,6 +4,9 @@ import uniqid from "uniqid";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import orderSchema from "../models/orderSchema";
+import productsSchema from "../models/productsSchema";
+import mongoose from "mongoose";
+import items from "razorpay/dist/types/items";
 
 const paymentRouter = express.Router();
 
@@ -53,15 +56,17 @@ paymentRouter.route("/verify").post(async (req, res) => {
     if (shasum !== razorpaySignature) {
       return res.status(400).json({ msg: "Transaction not legit!" });
     }
-    
+
     // THE PAYMENT IS LEGIT & VERIFIED
     // YOU CAN SAVE THE DETAILS IN YOUR DATABASE IF YOU WANT
+    orderDetails.items.forEach((item: any) => {
+      item.itemId = new mongoose.Types.ObjectId(item.itemId);
+    });
     await orderSchema.create({
       order_id: orderCreationId,
       razorpay_paymentId: razorpayPaymentId,
       ...orderDetails,
     });
-
     res.status(200).json({
       message: "Payment Success",
     });
@@ -70,4 +75,34 @@ paymentRouter.route("/verify").post(async (req, res) => {
   }
 });
 
+paymentRouter.route("/orders-details").post(async (req, res) => {
+  const { email } = req.body;
+  const data = await orderSchema.aggregate([
+    { $match: { email } },
+    {
+      $lookup: {
+        from: "products",
+        localField: "items.itemId",
+        foreignField: "_id",
+        as: "itemDetails",
+      },
+    },
+    {
+      $project: {
+        address: 1,
+        totalAmount: 1,
+        email: 1,
+        name: 1,
+        phoneNumber: 1,
+        totalItemCount: 1,
+        "itemDetails._id": 1,
+        "itemDetails.productName": 1,
+        "itemDetails.price": 1,
+        "itemDetails.quantity": 1,
+        "itemDetails.imgUrl": 1,
+      },
+    },
+  ]);
+  res.status(200).json(data);
+});
 export default paymentRouter;

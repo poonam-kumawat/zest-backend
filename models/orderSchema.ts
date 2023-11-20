@@ -10,6 +10,7 @@ interface Order {
   items: Array<any>;
   name: string;
   phoneNumber: number;
+  timeStamp: Date;
   totalItemCount: number;
 }
 const orderSchema = new Schema<Order>(
@@ -23,6 +24,7 @@ const orderSchema = new Schema<Order>(
     items: { type: [{}] },
     name: { type: String },
     phoneNumber: { type: Number },
+    timeStamp: { type: Date, default: Date.now },
     totalItemCount: { type: Number },
   },
   { versionKey: false }
