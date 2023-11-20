@@ -7,7 +7,7 @@ interface Produts {
   categories: string;
   product_description: string;
   image: string;
-  categoryIds:[ObjectId];
+  categoryIds: [ObjectId];
 }
 
 const productSchema = new Schema<Produts>({
@@ -17,8 +17,8 @@ const productSchema = new Schema<Produts>({
   categories: { type: String, required: true },
   product_description: { type: String },
   image: { type: String },
-  categoryIds: { type: [mongoose.Types.ObjectId] },
   
+  categoryIds: { type: [mongoose.Types.ObjectId] },
 });
 
 export default model<Produts>("product", productSchema);
