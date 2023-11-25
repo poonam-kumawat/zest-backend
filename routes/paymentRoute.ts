@@ -4,9 +4,7 @@ import uniqid from "uniqid";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import orderSchema from "../models/orderSchema";
-import productsSchema from "../models/productsSchema";
 import mongoose from "mongoose";
-import items from "razorpay/dist/types/items";
 
 const paymentRouter = express.Router();
 
@@ -97,6 +95,7 @@ paymentRouter.route("/orders-details").post(async (req, res) => {
         phoneNumber: 1,
         totalItemCount: 1,
         timeStamp: 1,
+        items: 1,
         "itemDetails._id": 1,
         "itemDetails.productName": 1,
         "itemDetails.price": 1,
