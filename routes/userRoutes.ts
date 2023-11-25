@@ -24,7 +24,7 @@ userRouter.route("/send-otp").post(async (req: Request, res: Response) => {
       { $set: createUser },
       { upsert: true, new: true }
     );
-        if (user?._id) {
+    if (user?._id) {
       await sendOTP(email, otp);
       res.status(201).json({
         type: "success",
@@ -52,12 +52,20 @@ userRouter.route("/verify-otp").post(async (req: Request, res: Response) => {
       .status(400)
       .json({ success: false, error: "enter valid credientials" });
   }
-  const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "60m",
-  });
-  const refreshToken = jwt.sign({ email: email }, "refreshSecret", {
-    expiresIn: "7d",
-  });
+  const accessToken = jwt.sign(
+    { email: email },
+    process.env.ACCESS_SECRET as string,
+    {
+      expiresIn: "60m",
+    }
+  );
+  const refreshToken = jwt.sign(
+    { email: email },
+    process.env.REFRESH_SECRET as string,
+    {
+      expiresIn: "7d",
+    }
+  );
 
   try {
     if (otp !== data.otpToken || data.expirationTime <= currentTime) {
@@ -77,9 +85,13 @@ userRouter.route("/refresh").post(async (req: Request, res: Response) => {
       .status(401)
       .json({ success: false, error: "Invalid token,try login again" });
   }
-  const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "60m", //alter this line in future
-  });
+  const accessToken = jwt.sign(
+    { email: email },
+    process.env.ACCESS_SECRET as string,
+    {
+      expiresIn: "60m", //alter this line in future
+    }
+  );
   return res.status(201).json({ success: true, accessToken });
 });
 
