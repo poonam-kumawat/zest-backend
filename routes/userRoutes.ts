@@ -3,7 +3,7 @@ import express, { Request, Response, Router, response } from "express";
 import { sendOTP } from "../utils/genrateOTP";
 import userSchema from "../models/userSchema";
 import * as jwt from "jsonwebtoken";
-import { verifyRefresh } from "../middleware/authorize";
+import { authorize, verifyRefresh } from "../middleware/authorize";
 
 const userRouter = express.Router();
 
@@ -22,7 +22,7 @@ userRouter.route("/send-otp").post(async (req: Request, res: Response) => {
     const user = await userSchema.findOneAndUpdate(
       { email: email },
       { $set: createUser },
-      { upsert: true }
+      { upsert: true, new: true }
     );
     if (user?._id) {
       await sendOTP(email, otp);
@@ -52,12 +52,20 @@ userRouter.route("/verify-otp").post(async (req: Request, res: Response) => {
       .status(400)
       .json({ success: false, error: "enter valid credientials" });
   }
-  const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "60m",
-  });
-  const refreshToken = jwt.sign({ email: email }, "refreshSecret", {
-    expiresIn: "7d",
-  });
+  const accessToken = jwt.sign(
+    { email: email },
+    process.env.ACCESS_SECRET as string,
+    {
+      expiresIn: "60m",
+    }
+  );
+  const refreshToken = jwt.sign(
+    { email: email },
+    process.env.REFRESH_SECRET as string,
+    {
+      expiresIn: "7d",
+    }
+  );
 
   try {
     if (otp !== data.otpToken || data.expirationTime <= currentTime) {
@@ -65,7 +73,6 @@ userRouter.route("/verify-otp").post(async (req: Request, res: Response) => {
     }
     return res.status(200).json({ accessToken, refreshToken, email });
   } catch (error: any) {
-    console.error(error);
     return res.status(401).json({ success: false, msg: error.message });
   }
 });
@@ -78,9 +85,13 @@ userRouter.route("/refresh").post(async (req: Request, res: Response) => {
       .status(401)
       .json({ success: false, error: "Invalid token,try login again" });
   }
-  const accessToken = jwt.sign({ email: email }, "accessSecret", {
-    expiresIn: "60m", //alter this line in future
-  });
+  const accessToken = jwt.sign(
+    { email: email },
+    process.env.ACCESS_SECRET as string,
+    {
+      expiresIn: "60m", //alter this line in future
+    }
+  );
   return res.status(201).json({ success: true, accessToken });
 });
 
@@ -92,27 +103,28 @@ userRouter.route("/refresh").post(async (req: Request, res: Response) => {
 //   return users;
 // });
 
-userRouter.route("/get-details").post(async (req: Request, res: Response) => {
-  try {
-    if (!req.body.email) {
-      throw new Error("Email is required!");
+userRouter
+  .route("/get-details")
+  .post(authorize, async (req: Request, res: Response) => {
+    try {
+      if (!req.body.email) {
+        throw new Error("Email is required!");
+      }
+      // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
+      const user = await userSchema.findOne({ email: req.body.email }).lean();
+      if (!user) {
+        throw new Error("User not found!");
+      } else {
+        return res.status(200).json(user);
+      }
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
     }
-    // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
-    const user = await userSchema.findOne({ email: req.body.email }).lean();
-    if (user !== undefined) {
-      return res.status(200).json(user);
-    } else {
-      throw new Error("User not found!");
-    }
-  } catch (error: any) {
-    console.log(error);
-    return res.status(400).json({ error: error.message });
-  }
-});
+  });
 
 userRouter
   .route("/update-details")
-  .post(async (req: Request, res: Response) => {
+  .post(authorize, async (req: Request, res: Response) => {
     try {
       const { email, update } = req.body;
       if (!email) {
@@ -149,7 +161,6 @@ userRouter
         throw new Error("User not found!");
       }
     } catch (error: any) {
-      console.log("error : ", error);
       return res.status(400).json({ error: error.message });
     }
   });
