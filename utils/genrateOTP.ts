@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import * as nodemailer from "nodemailer";
+import fs from "fs";
 
 dotenv.config();
 
@@ -11,14 +12,16 @@ let transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASSWORD,
   },
 });
+const emailTemplatePath = "utils/template.html";
+const emailTemplate = fs.readFileSync(emailTemplatePath, "utf-8");
 
 const sendOTP = (email: string, otp: any): void => {
-  // otp=Math.floor(100000 + Math.random() * 900000).toString();
+  const emailBody = emailTemplate.replace("{{otp}}", otp);
   const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,
     subject: "Your OTP Code",
-    html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
+    html: emailBody,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
