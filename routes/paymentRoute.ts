@@ -4,9 +4,7 @@ import uniqid from "uniqid";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import orderSchema from "../models/orderSchema";
-import productsSchema from "../models/productsSchema";
 import mongoose from "mongoose";
-import items from "razorpay/dist/types/items";
 
 const paymentRouter = express.Router();
 

@@ -12,22 +12,21 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-const sendOTP = (email: string,otp:any): void => {
+const sendOTP = (email: string, otp: any): void => {
   // otp=Math.floor(100000 + Math.random() * 900000).toString();
   const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,
-    subject: 'Your OTP Code',
+    subject: "Your OTP Code",
     html: `<p>Your OTP is: <strong>${otp}</strong></p>`,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('Error sending email: ' + error);
+      console.log("Error sending email: " + error);
     } else {
-      console.log('Email sent: ' + info.response);
+      console.log("Email sent: " + info.response);
     }
   });
 };
 
-
-export {sendOTP };
+export { sendOTP };
