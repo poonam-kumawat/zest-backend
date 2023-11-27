@@ -20,7 +20,6 @@ export function authorize(req: any, res: any, next: any) {
       }
     }
     req.email = decoded.email;
-    req.payload = decoded.email;
     next();
   } catch (error: any) {
     return res.status(401).json({ success: false, msg: error.message });
