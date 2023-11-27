@@ -131,7 +131,6 @@ userRouter
         throw new Error("Email is required!");
       }
 
-      // add condition to restrict acces from other details by decodeding token in auth gaurd and passing in request payload
       let user;
       if (update?.address) {
         user = await userSchema

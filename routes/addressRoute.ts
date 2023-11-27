@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 const addressRouter = express.Router();
 
 import addressSchema from "../models/addressSchema";
+import mongoose from "mongoose";
 
 addressRouter.route("/").post(async (req: Request, res: Response) => {
   try {
