@@ -20,7 +20,7 @@ const orderSchema = new Schema<Order>(
     address: { type: String },
     addressId: { type: String },
     totalAmount: { type: Number },
-    email: { type: String },
+    email: { type: String, required: true },
     items: { type: [{}] },
     name: { type: String },
     phoneNumber: { type: Number },
