@@ -32,7 +32,7 @@ app.use("/api/address", authorize, addressRouter);
 app.use("/api/payment", authorize, paymentRouter);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.send("Zest Backend running");
 });
 
 app.listen(port, () => {
