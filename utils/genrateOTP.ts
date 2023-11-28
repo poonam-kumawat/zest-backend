@@ -12,7 +12,7 @@ let transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASSWORD,
   },
 });
-const emailTemplatePath = "utils/template.html";
+const emailTemplatePath = "./template.html";
 const emailTemplate = fs.readFileSync(emailTemplatePath, "utf-8");
 
 const sendOTP = (email: string, otp: any): void => {
