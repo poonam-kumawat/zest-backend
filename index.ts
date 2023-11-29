@@ -19,7 +19,7 @@ const app: Express = express();
 const port = process.env.PORT;
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://zest-organic.vercel.app/",
+  "https://zest-organic.vercel.app",
 ];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
