@@ -17,7 +17,7 @@ let transporter = nodemailer.createTransport({
 const emailTemplatePath = path.join(__dirname, "..", "public", "template.html");
 const emailTemplate = fs.readFileSync(emailTemplatePath, "utf-8");
 
-const sendOTP = (email: string, otp: any): void => {
+const sendOTP = async (email: string, otp: any) => {
   const emailBody = emailTemplate.replace("{{otp}}", otp);
   const mailOptions = {
     from: process.env.SMTP_MAIL,
@@ -25,12 +25,16 @@ const sendOTP = (email: string, otp: any): void => {
     subject: "Your OTP Code",
     html: emailBody,
   };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error sending email: " + error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
+  await new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email: " + error);
+        reject(error);
+      } else {
+        console.log("Email sent: " + info.response);
+        resolve(info);
+      }
+    });
   });
 };
 
